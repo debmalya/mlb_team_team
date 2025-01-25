@@ -1,4 +1,19 @@
 from flask import Flask, jsonify, request, render_template
+# general data science library
+import pandas as pd
+import numpy as np
+
+# pulling data from APIs, parsing JSON
+import requests
+import json
+
+
+# interfacing w/ Cloud storage from python
+from google.cloud import storage
+
+# Plotting
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 app = Flask(__name__)
@@ -58,7 +73,6 @@ def compare_teams():
     if request.method == "POST":
         team1 = request.form.get("team1")
         team2 = request.form.get("team2")
-        #  from mlb_data get team name for id team1 and team2
         team1_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team1)), None)
         team2_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team2)), None)
         # Perform comparison logic here (example below)
