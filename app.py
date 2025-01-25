@@ -6,9 +6,36 @@ app = Flask(__name__)
 # Sample MLB data (replace with actual data from the hackathon)
 mlb_data = {
     "teams": [
-        {"name": "New York Yankees", "league": "AL"},
-        {"name": "Los Angeles Dodgers", "league": "NL"},
-        # ... more teams
+        {"name": "Arizona Diamondbacks", "id": 109},
+        {"name": "Atlanta Braves", "id": 144},
+        {"name": "Baltimore Orioles", "id": 110},
+        {"name": "Boston Red Sox", "id": 111},
+        {"name": "Chicago White Sox", "id": 145},
+        {"name": "Chicago Cubs", "id": 112},
+        {"name": "Cincinnati Reds", "id": 113},
+        {"name": "Cleveland Guardians", "id": 114},
+        {"name": "Colorado Rockies", "id": 115},
+        {"name": "Detroit Tigers", "id": 116},
+        {"name": "Houston Astros", "id": 117},
+        {"name": "Kansas City Royals", "id": 118},
+        {"name": "Los Angeles Angels", "id": 108},
+        {"name": "Los Angeles Dodgers", "id": 119},
+        {"name": "Miami Marlins", "id": 146},
+        {"name": "Milwaukee Brewers", "id": 158},
+        {"name": "Minnesota Twins", "id": 142},
+        {"name": "New York Yankees", "id": 147},
+        {"name": "New York Mets", "id": 121},
+        {"name": "Oakland Athletics", "id": 133},
+        {"name": "Philadelphia Phillies", "id": 143},
+        {"name": "Pittsburgh Pirates", "id": 134},
+        {"name": "San Diego Padres", "id": 135},
+        {"name": "San Francisco Giants", "id": 137},
+        {"name": "Seattle Mariners", "id": 136},
+        {"name": "St. Louis Cardinals", "id": 138},
+        {"name": "Tampa Bay Rays", "id": 139},
+        {"name": "Texas Rangers", "id": 140},
+        {"name": "Toronto Blue Jays", "id": 141},
+        {"name": "Washington Nationals", "id": 120}
     ],
     "players": [
         {"name": "Aaron Judge", "team": "New York Yankees", "position": "OF"},
@@ -28,7 +55,7 @@ def get_players():
 
 @app.route("/", methods=["GET", "POST"])
 def compare_teams():
-    if request.method == "GET":
+    if request.method == "POST":
         team1 = request.form.get("team1")
         team2 = request.form.get("team2")
         # Perform comparison logic here (example below)

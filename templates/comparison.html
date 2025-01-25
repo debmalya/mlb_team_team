@@ -1,16 +1,35 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="center-content">  
+<style>
+  .center-content {
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    min-height: 100vh;       /* Ensure it takes up full viewport height*/
+  
+  }
+  
+  .center-content form,
+  .center-content h2,
+  .center-content p {
+  
+    text-align: center; /* or left, right as needed */
+  }
+  
+  </style>
   <h1>Team Comparison</h1>
   <form method="POST">
     <select name="team1">
       {% for team in teams %}
-        <option value="{{ team.name }}">{{ team.name }}</option>
+        <option value="{{ team.id }}">{{ team.name }}</option>
       {% endfor %}
     </select>
     <select name="team2">
       {% for team in teams %}
-        <option value="{{ team.name }}">{{ team.name }}</option>
+        <option value="{{ team.id }}">{{ team.name }}</option>
       {% endfor %}
     </select>
     <button type="submit">Compare</button>
@@ -20,6 +39,6 @@
     <h2>Results:</h2>
     <p>{{ result }}</p>
   {% endif %}
-
+</div>
 
 {% endblock %}
