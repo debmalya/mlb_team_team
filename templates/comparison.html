@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Team Comparison</h1>
+  <form method="POST">
+    <select name="team1">
+      {% for team in teams %}
+        <option value="{{ team.name }}">{{ team.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="team2">
+      {% for team in teams %}
+        <option value="{{ team.name }}">{{ team.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Compare</button>
+  </form>
+
+  {% if result %}
+    <h2>Results:</h2>
+    <p>{{ result }}</p>
+  {% endif %}
+
+
+{% endblock %}
