@@ -58,8 +58,11 @@ def compare_teams():
     if request.method == "POST":
         team1 = request.form.get("team1")
         team2 = request.form.get("team2")
+        #  from mlb_data get team name for id team1 and team2
+        team1_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team1)), None)
+        team2_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team2)), None)
         # Perform comparison logic here (example below)
-        comparison_result = f"Comparing {team1} vs {team2}" 
+        comparison_result = f"Comparing {team1_name} vs {team2_name}" 
         return render_template("comparison.html", result=comparison_result, teams=mlb_data["teams"]) # Pass teams to template
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
