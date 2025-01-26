@@ -59,6 +59,36 @@ mlb_data = {
     ]
 }
 
+
+#@title Function to Load Newline Delimited JSON into Pandas DF
+def load_newline_delimited_json(url):
+    """Loads a newline-delimited JSON file from a URL into a pandas DataFrame.
+
+    Args:
+        url: The URL of the newline-delimited JSON file.
+
+    Returns:
+        A pandas DataFrame containing the data, or None if an error occurs.
+    """
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+
+        data = []
+        for line in response.text.strip().split('\n'):
+            try:
+                data.append(json.loads(line))
+            except json.JSONDecodeError as e:
+                print(f"Skipping invalid JSON line: {line} due to error: {e}")
+
+        return pd.DataFrame(data)
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading data: {e}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
+
 @app.route("/api/teams")
 def get_teams():
     return jsonify(mlb_data["teams"])
@@ -75,9 +105,12 @@ def compare_teams():
         team2 = request.form.get("team2")
         team1_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team1)), None)
         team2_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team2)), None)
+        team1_logo = f'https://www.mlbstatic.com/team-logos/{team1}.svg'
+        team2_logo = f'https://www.mlbstatic.com/team-logos/{team2}.svg'
         # Perform comparison logic here (example below)
         comparison_result = f"Comparing {team1_name} vs {team2_name}" 
-        return render_template("comparison.html", result=comparison_result, teams=mlb_data["teams"]) # Pass teams to template
+        # return render_template("comparison.html", result=comparison_result, teams=mlb_data["teams"]) # Pass teams to template
+        return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"])
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
 if __name__ == "__main__":

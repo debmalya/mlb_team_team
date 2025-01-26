@@ -36,9 +36,16 @@
   </form>
 
   {% if result %}
-    <h2>Results:</h2>
-    <p>{{ result }}</p>
-  {% endif %}
+        <h2>{{ result }}</h2>
+        <div>
+            <h3>{{ team1.name }}</h3>
+            <img src="{{ team1_logo }}" alt="{{ team1.name }} logo" width="100">
+        </div>
+        <div>
+            <h3>{{ team2.name }}</h3>
+            <img src="{{ team2_logo }}" alt="{{ team2.name }} logo" width="100">
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}
