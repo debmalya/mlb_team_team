@@ -36,15 +36,22 @@
   </form>
 
   {% if result %}
-        <h2>{{ result }}</h2>
-        <div>
-            <h3>{{ team1.name }}</h3>
-            <img src="{{ team1_logo }}" alt="{{ team1.name }} logo" width="100">
-        </div>
-        <div>
-            <h3>{{ team2.name }}</h3>
-            <img src="{{ team2_logo }}" alt="{{ team2.name }} logo" width="100">
-        </div>
+        <h2>Comparison Result</h2>
+        <div style="display: flex; justify-content: center;">
+            <div style="text-align: center; margin: 20px;">
+                <img src="{{ team1_logo }}" alt="{{ team1 }} Logo" width="100" height="100">
+                <p>{{ team1 }}</p>
+            </div>
+            <div style="text-align: center; margin: 20px;">
+              <img src="{{ team2_logo }}" alt="{{ team2 }} Logo" width="100" height="100">
+              <p>{{ team2 }}</p>
+            </div>
+          </div>
+          <p>{{ result }}</p>
+
+
+
+
     {% endif %}
 </div>
 
