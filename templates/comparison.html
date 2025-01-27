@@ -1,71 +1,130 @@
 {% extends "layout.html" %}
 
+{% block title %}Team Comparison{% endblock %}
+
 {% block content %}
-<div class="center-content">  
 <style>
-  .center-content {
+.center-content {
     display: flex;
-    flex-direction: column; /* Align items vertically */
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
-    min-height: 100vh;       /* Ensure it takes up full viewport height*/
-  
-  }
-  
-  .center-content form,
-  .center-content h2,
-  .center-content p {
-  
-    text-align: center; /* or left, right as needed */
-  }
-  
-  </style>
-  <h1>Team Comparison</h1>
-  <form method="POST">
-    <select name="team1">
-      {% for team in teams %}
-        <option value="{{ team.id }}">{{ team.name }}</option>
-      {% endfor %}
-    </select>
-    <select name="team2">
-      {% for team in teams %}
-        <option value="{{ team.id }}">{{ team.name }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit">Compare</button>
-  </form>
+    flex-direction: column;
+    align-items: center;
+}
+.center-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.center-content select, .center-content button {
+    margin: 10px;
+}
+.center-content table {
+    margin: 20px 0;
+    border-collapse: collapse;
+    width: 80%;
+}
+.center-content th, .center-content td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+.center-content h3, .center-content h4 {
+    text-align: center;
+}
+</style>
 
-  {% if result %}
-  <h2>Comparison Result</h2>
-  <div style="display: flex; justify-content: center;">
-      <div style="text-align: center; margin: 20px;">
-          <img src="{{ team1_logo }}" alt="{{ team1 }} Logo" width="100" height="100">
-          <p>{{ team1 }}</p>
-      </div>
-      <div style="text-align: center; margin: 20px;">
-          <img src="{{ team2_logo }}" alt="{{ team2 }} Logo" width="100" height="100">
-          <p>{{ team2 }}</p>
-      </div>
-  </div>
+<h1 style="text-align: center;">Team Comparison</h1>
+<div class="center-content">
+    <form method="POST">
+        <select name="team1">
+            {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="team2">
+            {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Compare</button>
+    </form>
+</div>
 
-  {% for category in team1_stats.keys() %}
-      {% if category in team2_stats %}
-          <h3>{{ category }}</h3>
-          <table>
-              <tr>
-                  <th>Stat</th>
-                  <th>{{ team1 }}</th>
-                  <th>{{ team2 }}</th>
-              </tr>
-              {% for key, value in team1_stats[category].items() %}
-                  <tr>
-                      <td>{{ key }}</td>
-                      <td>{{ value }}</td>
-                      <td>{{ team2_stats[category][key] }}</td>
-                  </tr>
-              {% endfor %}
-          </table>
-      {% endif %}
-  {% endfor %}
+{% if result %}
+    <h2 style="text-align: center;">Comparison Result</h2>
+    <div style="display: flex; justify-content: center;">
+        <div style="text-align: center; margin: 20px;">
+            <img src="{{ team1_logo }}" alt="{{ team1 }} Logo" width="100" height="100">
+            <p>{{ team1 }}</p>
+        </div>
+        <div style="text-align: center; margin: 20px;">
+            <img src="{{ team2_logo }}" alt="{{ team2 }} Logo" width="100" height="100">
+            <p>{{ team2 }}</p>
+        </div>
+    </div>
+
+    <div class="center-content">
+        {% for category in team1_stats.keys() %}
+            {% if category in team2_stats %}
+                <h3>{{ category }}</h3>
+                <table>
+                    <tr>
+                        <th>Stat</th>
+                        <th>{{ team1 }}</th>
+                        <th>{{ team2 }}</th>
+                    </tr>
+                    {% for key, value in team1_stats[category].items() %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value }}</td>
+                            <td>{{ team2_stats[category][key] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <h2 style="text-align: center;">Non-Matching Categories</h2>
+    <div class="center-content">
+        <h3>{{ team1 }} Only</h3>
+        {% for category in team1_stats.keys() %}
+            {% if category not in team2_stats %}
+                <h4>{{ category }}</h4>
+                <table>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                    {% for key, value in team1_stats[category].items() %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="center-content">
+        <h3>{{ team2 }} Only</h3>
+        {% for category in team2_stats.keys() %}
+            {% if category not in team1_stats %}
+                <h4>{{ category }}</h4>
+                <table>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                    {% for key, value in team2_stats[category].items() %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endif %}
 {% endblock %}
