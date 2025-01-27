@@ -179,10 +179,12 @@ def get_team_stats_from_json(team_id):
             
             group_name =group["group"]["displayName"]
             print(group_name)
-            for split in group.get("splits", []):
-                print(split)
-                if split["team"]["id"] == team_id:
-                    team_stats[group_name] = split["stat"]
+            for splits in group.get("splits"):
+                
+                if splits["team"]["id"] == int(team_id):
+                    print(f"Group: {group_name}, Splits.team.id: {splits["team"]["id"]} passed team id : {team_id}")
+                    team_stats['rank'] = splits["rank"]
+                    team_stats[group_name] = splits["stat"]
         return team_stats
 
 @app.route("/", methods=["GET", "POST"])
