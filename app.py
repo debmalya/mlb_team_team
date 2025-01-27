@@ -183,7 +183,7 @@ def get_team_stats_from_json(team_id):
                 
                 if splits["team"]["id"] == int(team_id):
                     print(f"Group: {group_name}, Splits.team.id: {splits["team"]["id"]} passed team id : {team_id}")
-                    team_stats['rank'] = splits["rank"]
+                    # team_stats['rank'] = splits["rank"]
                     team_stats[group_name] = splits["stat"]
         return team_stats
 
@@ -201,11 +201,11 @@ def compare_teams():
         team2_stats = get_team_stats_from_json(team2)
        
         # Perform comparison logic here (example below)
-        comparison_result = f"Comparing {team1_name} vs {team2_name}" 
-        comparison_result += f"{team1_name} Stats: {team1_stats}\n"
+        # comparison_result = f"Comparing {team1_name} vs {team2_name}" 
+        comparison_result = f"{team1_name} Stats: {team1_stats}\n"
         comparison_result += f"{team2_name} Stats: {team2_stats}"
         # return render_template("comparison.html", result=comparison_result, teams=mlb_data["teams"]) # Pass teams to template
-        return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"])
+        return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"],team1_stats=team1_stats, team2_stats=team2_stats)
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
 if __name__ == "__main__":
