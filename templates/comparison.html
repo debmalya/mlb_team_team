@@ -47,11 +47,45 @@
               <p>{{ team2 }}</p>
             </div>
           </div>
-          <div>
-            <p>{{ result }}</p>
-          </div>
           
-
+          
+          <div>
+            <h2>{{ team1 }} Stats</h2>
+            {% for category, stats in team1_stats.items() %}
+                <h3>{{ category }}</h3>
+                <table>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                    {% for key, value in stats.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endfor %}
+        </div>
+    
+        <div>
+            <h2>{{ team2 }} Stats</h2>
+            {% for category, stats in team2_stats.items() %}
+                <h3>{{ category }}</h3>
+                <table>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                    {% for key, value in stats.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endfor %}
+        </div>
 
 
 
