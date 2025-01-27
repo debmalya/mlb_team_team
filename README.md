@@ -15,8 +15,8 @@ This project is a web application that allows users to compare MLB teams. It use
 
 1. Clone the repository:
     ```sh
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone https://github.com/dj711-art/mlb_team_team
+    cd mlb_team_team
     ```
 
 2. Create a virtual environment and activate it:
