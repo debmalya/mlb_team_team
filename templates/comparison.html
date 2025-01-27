@@ -73,10 +73,11 @@
                         <th>{{ team2 }}</th>
                     </tr>
                     {% for key, value in team1_stats[category].items() %}
+                        {% set team2_value = team2_stats[category][key] %}
                         <tr>
                             <td>{{ key }}</td>
-                            <td>{{ value }}</td>
-                            <td>{{ team2_stats[category][key] }}</td>
+                            <td style="color: {% if value > team2_value %}green{% elif value < team2_value %}red{% else %}black{% endif %};">{{ value }}</td>
+                            <td style="color: {% if team2_value > value %}green{% elif team2_value < value %}red{% else %}black{% endif %};">{{ team2_value }}</td>
                         </tr>
                     {% endfor %}
                 </table>
