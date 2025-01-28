@@ -6,3 +6,5 @@ google-cloud-bigquery
 pandas
 numpy
 seaborn
+google-cloud-memcache
+# MLB-StatsAPI
