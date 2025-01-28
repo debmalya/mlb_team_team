@@ -15,6 +15,8 @@ from google.cloud import storage
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import os
+
 
 app = Flask(__name__)
 
@@ -209,4 +211,5 @@ def compare_teams():
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
