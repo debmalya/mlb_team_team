@@ -1,24 +1,17 @@
+import os
 from flask import Flask, jsonify, request, render_template
-# general data science library
-import pandas as pd
-import numpy as np
+
 
 # pulling data from APIs, parsing JSON
 import requests
 import json
 
 
-# interfacing w/ Cloud storage from python
-from google.cloud import storage
 
-# Plotting
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-import os
-
-
+print("Before app creation")
 app = Flask(__name__)
+print("After app creation")
+
 
 # Sample MLB data (replace with actual data from the hackathon)
 mlb_data = {
@@ -209,6 +202,13 @@ def compare_teams():
         return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"],team1_stats=team1_stats, team2_stats=team2_stats)
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+    print("Before main block")
+    app.run(host="0.0.0.0", port=port, debug=True) # or app.run(debug=True) if port can be auto-detected.
+    
+
+
+print("After main block")
