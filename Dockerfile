@@ -8,8 +8,10 @@ RUN pip freeze
 
 
 COPY . .
-COPY data/2024.json /app/data/  
+COPY data/ /app/data/  
 COPY templates /app/templates
+COPY gunicorn.conf.py gunicorn.conf.py
 
 
 CMD ["python", "app.py"]
+# CMD sh -c "gunicorn --bind 0.0.0.0:$PORT app:app -c ./gunicorn.conf.py"

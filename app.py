@@ -5,12 +5,35 @@ from flask import Flask, jsonify, request, render_template
 # pulling data from APIs, parsing JSON
 import requests
 import json
+import pandas as pd
+import datetime
+
 
 
 
 print("Before app creation")
 app = Flask(__name__)
+app.config['THREADED'] = False
 print("After app creation")
+# Import routes *after* creating the app instance
+# from app import routes  # Move this *after* the current_season assignment
+
+# Function to get the current MLB season
+def get_current_mlb_season():
+    now = datetime.datetime.now()
+    current_year = now.year
+    # Adjust this logic based on when the MLB season typically starts and ends.
+    # For example, if the season typically starts in April, you might use:
+    if now.month < 4:  # Before April, use the previous year
+        current_season = current_year - 1
+    else:
+        current_season = current_year
+    return current_season
+
+# 1. Call get_current_mlb_season() to get current_season
+current_season = get_current_mlb_season()
+
+
 
 
 # Sample MLB data (replace with actual data from the hackathon)
@@ -83,6 +106,9 @@ def load_newline_delimited_json(url):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return None
+    
+
+ 
 
 @app.route("/api/teams")
 def get_teams():
@@ -144,10 +170,12 @@ def get_team_performance():
         return jsonify(df.to_dict(orient="records"))
     return jsonify({"error": "Failed to fetch data"}), 500
 
-def fetch_mlb_team_performance_data():
+@app.route("/api/team_stats/<int:season>")
+def fetch_mlb_team_performance_data(season):
     url = "https://statsapi.mlb.com/api/v1/teams/stats"
     params = {
-        "season": "2024",
+        "season": season,
+        "sportId": "1",
         "group": "hitting,pitching,fielding",
         "stats": "season"
     }
@@ -157,7 +185,8 @@ def fetch_mlb_team_performance_data():
         data = response.json()
         teams_stats = data.get("stats", [])
         print(teams_stats)
-        return pd.DataFrame(teams_stats)
+        # return pd.DataFrame(teams_stats)
+        return teams_stats
     except requests.exceptions.RequestException as e:
         print(f"Error downloading data: {e}")
         return None
@@ -166,40 +195,55 @@ def fetch_mlb_team_performance_data():
         return None
 
 # Function to get team stats from JSON file
-def get_team_stats_from_json(team_id):
-    with open('data/2024.json', 'r') as file:
-        data = json.load(file)
-        team_stats = {}
-        for group in data:
+def get_team_stats_from_json(team_id,season):
+    try:
+        with open(f'data/{season}.json', 'r') as file:
+            data = json.load(file)
+            team_stats = {}
+            for group in data:
             
-            group_name =group["group"]["displayName"]
+                group_name =group["group"]["displayName"]
             
-            for splits in group.get("splits"):
+                for splits in group.get("splits"):
                 
-                if splits["team"]["id"] == int(team_id):
-                    # team_stats['rank'] = splits["rank"]
-                    team_stats[group_name] = splits["stat"]
-        return team_stats
+                    if splits["team"]["id"] == int(team_id):
+                        # team_stats['rank'] = splits["rank"]
+                        team_stats[group_name] = splits["stat"]
+                        break
+            return team_stats
+        
+    except FileNotFoundError:
+        print(f"File not found: data/{season}.json")
+        return None
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON from file: data/{season}.json")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
 
 @app.route("/", methods=["GET", "POST"])
 def compare_teams():
     if request.method == "POST":
         team1 = request.form.get("team1")
         team2 = request.form.get("team2")
+        season = int(request.form.get("season"))
+        print(season)
         team1_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team1)), None)
         team2_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team2)), None)
         team1_logo = f'https://www.mlbstatic.com/team-logos/{team1}.svg'
         team2_logo = f'https://www.mlbstatic.com/team-logos/{team2}.svg'
 
-        team1_stats = get_team_stats_from_json(team1)
-        team2_stats = get_team_stats_from_json(team2)
+        team1_stats = get_team_stats_from_json(team1, season)
+        team2_stats = get_team_stats_from_json(team2, season)
        
         # Perform comparison logic here (example below)
         # comparison_result = f"Comparing {team1_name} vs {team2_name}" 
+        if team1_stats is None or team2_stats is None:
+            return render_template("comparison.html", error="Error fetching team stats", teams=mlb_data["teams"])
         comparison_result = f"{team1_name} Stats: {team1_stats}\n"
-        comparison_result += f"{team2_name} Stats: {team2_stats}"
-        # return render_template("comparison.html", result=comparison_result, teams=mlb_data["teams"]) # Pass teams to template
-        return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"],team1_stats=team1_stats, team2_stats=team2_stats)
+        comparison_result += f"{team2_name} Stats: {team2_stats} season: {season}"
+        return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"],team1_stats=team1_stats, team2_stats=team2_stats,season=season)
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
 
