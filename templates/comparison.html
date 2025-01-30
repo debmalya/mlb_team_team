@@ -83,8 +83,8 @@
     <table>
         <tr>
             <th>Stat</th>
-            <th>{{ team1 }}</th>
-            <th>{{ team2 }}</th>
+            <th>{{ team1 }} season {{season}}</th>
+            <th>{{ team2 }} season {{season}}</th>
         </tr>
         {% for key, value in team1_stats[category].items() %}
         {% set team2_value = team2_stats[category][key] %}
@@ -103,11 +103,13 @@
     {% endfor %}
 </div>
 
-<h2 style="text-align: center;">Non-Matching Categories</h2>
+
 <div class="center-content">
-    <h3>{{ team1 }} Only</h3>
+    
     {% for category in team1_stats.keys() %}
     {% if category not in team2_stats %}
+    <h2 style="text-align: center;">Non-Matching Categories</h2>
+    <h3>{{ team1 }} Only</h3>
     <h4>{{ category }}</h4>
     <table>
         <tr>
@@ -126,9 +128,10 @@
 </div>
 
 <div class="center-content">
-    <h3>{{ team2 }} Only</h3>
+    
     {% for category in team2_stats.keys() %}
     {% if category not in team1_stats %}
+    <h3>{{ team2 }} Only</h3>
     <h4>{{ category }}</h4>
     <table>
         <tr>
