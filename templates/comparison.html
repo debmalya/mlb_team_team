@@ -4,32 +4,40 @@
 
 {% block content %}
 <style>
-.center-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.center-content form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.center-content select, .center-content button {
-    margin: 10px;
-}
-.center-content table {
-    margin: 20px 0;
-    border-collapse: collapse;
-    width: 80%;
-}
-.center-content th, .center-content td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-}
-.center-content h3, .center-content h4 {
-    text-align: center;
-}
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .center-content form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .center-content select,
+    .center-content button {
+        margin: 10px;
+    }
+
+    .center-content table {
+        margin: 20px 0;
+        border-collapse: collapse;
+        width: 80%;
+    }
+
+    .center-content th,
+    .center-content td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .center-content h3,
+    .center-content h4 {
+        text-align: center;
+    }
 </style>
 
 <h1 style="text-align: center;">Team Comparison</h1>
@@ -37,12 +45,18 @@
     <form method="POST">
         <select name="team1">
             {% for team in teams %}
-                <option value="{{ team.id }}">{{ team.name }}</option>
+            <option value="{{ team.id }}">{{ team.name }}</option>
             {% endfor %}
         </select>
         <select name="team2">
             {% for team in teams %}
-                <option value="{{ team.id }}">{{ team.name }}</option>
+            <option value="{{ team.id }}">{{ team.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="season">Season:</label> 
+        <select name="season" id="season">
+            {% for year in range(2010, 2025) %} {# Adjust start year as needed #}
+            <option value="{{ year }}" {% if year==2024 %}selected{% endif %}>{{ year }}</option>
             {% endfor %}
         </select>
         <button type="submit">Compare</button>
@@ -50,82 +64,89 @@
 </div>
 
 {% if result %}
-    <h2 style="text-align: center;">Comparison Result</h2>
-    <div style="display: flex; justify-content: center;">
-        <div style="text-align: center; margin: 20px;">
-            <img src="{{ team1_logo }}" alt="{{ team1 }} Logo" width="100" height="100">
-            <p>{{ team1 }}</p>
-        </div>
-        <div style="text-align: center; margin: 20px;">
-            <img src="{{ team2_logo }}" alt="{{ team2 }} Logo" width="100" height="100">
-            <p>{{ team2 }}</p>
-        </div>
+<h2 style="text-align: center;">Comparison Result {{season}}</h2>
+<div style="display: flex; justify-content: center;">
+    <div style="text-align: center; margin: 20px;">
+        <img src="{{ team1_logo }}" alt="{{ team1 }} Logo" width="100" height="100">
+        <p>{{ team1 }}</p>
     </div>
+    <div style="text-align: center; margin: 20px;">
+        <img src="{{ team2_logo }}" alt="{{ team2 }} Logo" width="100" height="100">
+        <p>{{ team2 }}</p>
+    </div>
+</div>
 
-    <div class="center-content">
-        {% for category in team1_stats.keys() %}
-            {% if category in team2_stats %}
-                <h3>{{ category }}</h3>
-                <table>
-                    <tr>
-                        <th>Stat</th>
-                        <th>{{ team1 }}</th>
-                        <th>{{ team2 }}</th>
-                    </tr>
-                    {% for key, value in team1_stats[category].items() %}
-                        {% set team2_value = team2_stats[category][key] %}
-                        <tr>
-                            <td>{{ key }}</td>
-                            <td style="color: {% if value > team2_value %}green{% elif value < team2_value %}red{% else %}black{% endif %};">{{ value }}</td>
-                            <td style="color: {% if team2_value > value %}green{% elif team2_value < value %}red{% else %}black{% endif %};">{{ team2_value }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
+<div class="center-content">
+    {% for category in team1_stats.keys() %}
+    {% if category in team2_stats %}
+    <h3>{{ category }}</h3>
+    <table>
+        <tr>
+            <th>Stat</th>
+            <th>{{ team1 }} season {{season}}</th>
+            <th>{{ team2 }} season {{season}}</th>
+        </tr>
+        {% for key, value in team1_stats[category].items() %}
+        {% set team2_value = team2_stats[category][key] %}
+        <tr>
+            <td>{{ key }}</td>
+            <td
+                style="color: {% if value > team2_value %}green{% elif value < team2_value %}red{% else %}black{% endif %};">
+                {{ value }}</td>
+            <td
+                style="color: {% if team2_value > value %}green{% elif team2_value < value %}red{% else %}black{% endif %};">
+                {{ team2_value }}</td>
+        </tr>
         {% endfor %}
-    </div>
+    </table>
+    {% endif %}
+    {% endfor %}
+</div>
 
+
+<div class="center-content">
+    
+    {% for category in team1_stats.keys() %}
+    {% if category not in team2_stats %}
     <h2 style="text-align: center;">Non-Matching Categories</h2>
-    <div class="center-content">
-        <h3>{{ team1 }} Only</h3>
-        {% for category in team1_stats.keys() %}
-            {% if category not in team2_stats %}
-                <h4>{{ category }}</h4>
-                <table>
-                    <tr>
-                        <th>Stat</th>
-                        <th>Value</th>
-                    </tr>
-                    {% for key, value in team1_stats[category].items() %}
-                        <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
+    <h3>{{ team1 }} Only</h3>
+    <h4>{{ category }}</h4>
+    <table>
+        <tr>
+            <th>Stat</th>
+            <th>Value</th>
+        </tr>
+        {% for key, value in team1_stats[category].items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
         {% endfor %}
-    </div>
+    </table>
+    {% endif %}
+    {% endfor %}
+</div>
 
-    <div class="center-content">
-        <h3>{{ team2 }} Only</h3>
-        {% for category in team2_stats.keys() %}
-            {% if category not in team1_stats %}
-                <h4>{{ category }}</h4>
-                <table>
-                    <tr>
-                        <th>Stat</th>
-                        <th>Value</th>
-                    </tr>
-                    {% for key, value in team2_stats[category].items() %}
-                        <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
+<div class="center-content">
+    
+    {% for category in team2_stats.keys() %}
+    {% if category not in team1_stats %}
+    <h3>{{ team2 }} Only</h3>
+    <h4>{{ category }}</h4>
+    <table>
+        <tr>
+            <th>Stat</th>
+            <th>Value</th>
+        </tr>
+        {% for key, value in team2_stats[category].items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
         {% endfor %}
-    </div>
+    </table>
+    {% endif %}
+    {% endfor %}
+</div>
 {% endif %}
 {% endblock %}
