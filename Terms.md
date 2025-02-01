@@ -78,3 +78,5 @@ In this game, the batter has 3 at-bats. He has one hit (the single), so his batt
 ## In Summary
 
 An at-bat is a very specific statistic that tracks a batter's official attempts to reach base. It's fundamental to understanding a player's batting performance and is a core component of baseball's statistical analysis. It's a distinction between having a plate appearance and having a chance to get a hit (or an out).
+
+# 

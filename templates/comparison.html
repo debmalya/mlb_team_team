@@ -43,23 +43,25 @@
 <h1 style="text-align: center;">Team Comparison</h1>
 <div class="center-content">
     <form method="POST">
+        <label for="team1">First Team:</label> 
         <select name="team1">
             {% for team in teams %}
             <option value="{{ team.id }}" {% if team.name == team1 %}selected{% endif %}>{{ team.name }}</option>
             {% endfor %}
         </select>
-        <label for="season1">Season for team1:</label> 
+        <label for="season1">Season for first team:</label> 
         <select name="season1" id="season1">
             {% for year in range(2009, 2026) %} {# Adjust start year as needed #}
             <option value="{{ year }}" {% if year==season1 %}selected{% endif %}>{{ year }}</option>
             {% endfor %}
         </select>
+        <label for="team2">Second Team:</label>
         <select name="team2">
             {% for team in teams %}
             <option value="{{ team.id }}" {% if team.name == team2 %}selected{% endif %}>{{ team.name }}</option>
             {% endfor %}
         </select>
-        <label for="season2">Season for team2:</label> 
+        <label for="season2">Season for second team:</label> 
         <select name="season2" id="season2">
             {% for year in range(2009, 2026) %} {# Adjust start year as needed #}
             <option value="{{ year }}" {% if year==season2 %}selected{% endif %}>{{ year }}</option>
