@@ -45,18 +45,24 @@
     <form method="POST">
         <select name="team1">
             {% for team in teams %}
-            <option value="{{ team.id }}">{{ team.name }}</option>
+            <option value="{{ team.id }}" {% if team.name == team1 %}selected{% endif %}>{{ team.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="season1">Season for team1:</label> 
+        <select name="season1" id="season1">
+            {% for year in range(2009, 2026) %} {# Adjust start year as needed #}
+            <option value="{{ year }}" {% if year==season1 %}selected{% endif %}>{{ year }}</option>
             {% endfor %}
         </select>
         <select name="team2">
             {% for team in teams %}
-            <option value="{{ team.id }}">{{ team.name }}</option>
+            <option value="{{ team.id }}" {% if team.name == team2 %}selected{% endif %}>{{ team.name }}</option>
             {% endfor %}
         </select>
-        <label for="season">Season:</label> 
-        <select name="season" id="season">
-            {% for year in range(2010, 2025) %} {# Adjust start year as needed #}
-            <option value="{{ year }}" {% if year==2024 %}selected{% endif %}>{{ year }}</option>
+        <label for="season2">Season for team2:</label> 
+        <select name="season2" id="season2">
+            {% for year in range(2009, 2026) %} {# Adjust start year as needed #}
+            <option value="{{ year }}" {% if year==season2 %}selected{% endif %}>{{ year }}</option>
             {% endfor %}
         </select>
         <button type="submit">Compare</button>
@@ -64,15 +70,15 @@
 </div>
 
 {% if result %}
-<h2 style="text-align: center;">Comparison Result {{season}}</h2>
+<h2 style="text-align: center;">Comparison Result</h2>
 <div style="display: flex; justify-content: center;">
     <div style="text-align: center; margin: 20px;">
         <img src="{{ team1_logo }}" alt="{{ team1 }} Logo" width="100" height="100">
-        <p>{{ team1 }}</p>
+        <p>{{ team1 }} {{ season1 }}</p>
     </div>
     <div style="text-align: center; margin: 20px;">
         <img src="{{ team2_logo }}" alt="{{ team2 }} Logo" width="100" height="100">
-        <p>{{ team2 }}</p>
+        <p>{{ team2 }} {{ season2 }}</p>
     </div>
 </div>
 
@@ -83,8 +89,8 @@
     <table>
         <tr>
             <th>Stat</th>
-            <th>{{ team1 }} season {{season}}</th>
-            <th>{{ team2 }} season {{season}}</th>
+            <th>{{ team1 }} season {{ season1 }}</th>
+            <th>{{ team2 }} season {{ season2 }}</th>
         </tr>
         {% for key, value in team1_stats[category].items() %}
         {% set team2_value = team2_stats[category][key] %}
@@ -109,7 +115,7 @@
     {% for category in team1_stats.keys() %}
     {% if category not in team2_stats %}
     <h2 style="text-align: center;">Non-Matching Categories</h2>
-    <h3>{{ team1 }} Only</h3>
+    <h3>{{ team1 }} {{ season1 }}</h3>
     <h4>{{ category }}</h4>
     <table>
         <tr>
@@ -131,7 +137,7 @@
     
     {% for category in team2_stats.keys() %}
     {% if category not in team1_stats %}
-    <h3>{{ team2 }} Only</h3>
+    <h3>{{ team2 }} {{ season2 }}</h3>
     <h4>{{ category }}</h4>
     <table>
         <tr>
