@@ -207,8 +207,9 @@ def get_team_stats_from_json(team_id,season):
                 for splits in group.get("splits"):
                 
                     if splits["team"]["id"] == int(team_id):
-                        # team_stats['rank'] = splits["rank"]
                         team_stats[group_name] = splits["stat"]
+                        team_stats[group_name]["rank"]=int(splits["rank"])
+                        # team_status['hitting']['rank'] = 1
                         break
             return team_stats
         
@@ -245,6 +246,8 @@ def compare_teams():
             return render_template("comparison.html", error="Error fetching team stats", teams=mlb_data["teams"])
         comparison_result = f"{team1_name} Stats: {team1_stats}\n"
         comparison_result += f"{team2_name} Stats: {team2_stats}"
+        print(team1_stats)
+        print(team2_stats)
         return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"],team1_stats=team1_stats, team2_stats=team2_stats,season1=season1,season2=season2)
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
