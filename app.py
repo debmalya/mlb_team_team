@@ -207,8 +207,9 @@ def get_team_stats_from_json(team_id,season):
                 for splits in group.get("splits"):
                 
                     if splits["team"]["id"] == int(team_id):
-                        # team_stats['rank'] = splits["rank"]
                         team_stats[group_name] = splits["stat"]
+                        team_stats[group_name]["rank"]=int(splits["rank"])
+                        # team_status['hitting']['rank'] = 1
                         break
             return team_stats
         
@@ -227,23 +228,27 @@ def compare_teams():
     if request.method == "POST":
         team1 = request.form.get("team1")
         team2 = request.form.get("team2")
-        season = int(request.form.get("season"))
-        print(season)
+        
+        season1 = int(request.form.get("season1"))
+        season2 = int(request.form.get("season2"))
+        
         team1_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team1)), None)
         team2_name = next((team["name"] for team in mlb_data["teams"] if team["id"] == int(team2)), None)
         team1_logo = f'https://www.mlbstatic.com/team-logos/{team1}.svg'
         team2_logo = f'https://www.mlbstatic.com/team-logos/{team2}.svg'
 
-        team1_stats = get_team_stats_from_json(team1, season)
-        team2_stats = get_team_stats_from_json(team2, season)
+        team1_stats = get_team_stats_from_json(team1, season1)
+        team2_stats = get_team_stats_from_json(team2, season2)
        
         # Perform comparison logic here (example below)
         # comparison_result = f"Comparing {team1_name} vs {team2_name}" 
         if team1_stats is None or team2_stats is None:
             return render_template("comparison.html", error="Error fetching team stats", teams=mlb_data["teams"])
         comparison_result = f"{team1_name} Stats: {team1_stats}\n"
-        comparison_result += f"{team2_name} Stats: {team2_stats} season: {season}"
-        return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"],team1_stats=team1_stats, team2_stats=team2_stats,season=season)
+        comparison_result += f"{team2_name} Stats: {team2_stats}"
+        print(team1_stats)
+        print(team2_stats)
+        return render_template("comparison.html", result=comparison_result, team1=team1_name, team2=team2_name, team1_logo=team1_logo, team2_logo=team2_logo, teams=mlb_data["teams"],team1_stats=team1_stats, team2_stats=team2_stats,season1=season1,season2=season2)
     return render_template("comparison.html", teams=mlb_data["teams"]) # Pass teams to template
 
 
